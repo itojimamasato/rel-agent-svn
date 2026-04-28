@@ -16,9 +16,6 @@ COPY conf/svn.conf.template /etc/apache2/sites-available/svn.conf.template
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# SVNリポジトリ・設定の永続化先（Railway Volumeをここにマウント）
-VOLUME ["/svn"]
-
 EXPOSE 80
 
 ENTRYPOINT ["/entrypoint.sh"]
