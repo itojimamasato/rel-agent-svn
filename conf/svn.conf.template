@@ -1,15 +1,12 @@
-# Railway は $PORT を動的に割り当てるため、テンプレートで差し込む
-Listen ${SVN_PORT}
-
 <VirtualHost *:${SVN_PORT}>
     ServerName localhost
 
-    # ヘルスチェック用エンドポイント（認証不要）
-    <Location /health>
-        Require all granted
-    </Location>
-
+    # ヘルスチェック用エンドポイント（認証不要・静的ファイル）
     Alias /health /var/www/html/health.html
+    <Directory /var/www/html>
+        Require all granted
+        Options None
+    </Directory>
 
     # SVN リポジトリ群のルート
     <Location /svn>
@@ -22,7 +19,6 @@ Listen ${SVN_PORT}
 
         Require valid-user
 
-        # SVNオートバージョニング（WebDAVクライアントとの互換性向上）
         SVNAutoversioning on
     </Location>
 
