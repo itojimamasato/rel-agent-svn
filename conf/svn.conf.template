@@ -1,0 +1,31 @@
+# Railway は $PORT を動的に割り当てるため、テンプレートで差し込む
+Listen ${SVN_PORT}
+
+<VirtualHost *:${SVN_PORT}>
+    ServerName localhost
+
+    # ヘルスチェック用エンドポイント（認証不要）
+    <Location /health>
+        Require all granted
+    </Location>
+
+    Alias /health /var/www/html/health.html
+
+    # SVN リポジトリ群のルート
+    <Location /svn>
+        DAV svn
+        SVNParentPath /svn/repos
+
+        AuthType Basic
+        AuthName "SVN Repository"
+        AuthUserFile /svn/conf/passwd
+
+        Require valid-user
+
+        # SVNオートバージョニング（WebDAVクライアントとの互換性向上）
+        SVNAutoversioning on
+    </Location>
+
+    ErrorLog /dev/stderr
+    CustomLog /dev/stdout combined
+</VirtualHost>
